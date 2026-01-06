@@ -48,9 +48,10 @@ exports.login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
     // Create token
+    // NOTE: Replace the hardcoded secret with an environment variable in production (process.env.JWT_SECRET)
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      "SECRETKEY123",
+      process.env.JWT_SECRET || "SECRETKEY123",
       { expiresIn: "7d" }
     );
 

@@ -1,7 +1,15 @@
 /**
  * AdminDashboard.jsx
+ * ------------------
  * Dashboard overview for admins: quick summaries and user management.
+ *
+ * Responsibilities:
+ *  - Fetch products, sales and users from the API (authenticated requests)
+ *  - Compute simple statistics (sales today, sales this month, low stock)
+ *  - Render summary cards and lists for inventory and users
+ *  - Provide an "Add Teller" modal for admin user creation
  */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -9,32 +17,42 @@ import Loading from "../components/Loading";
 import { useToast } from '../components/ToastProvider'
 
 export default function AdminDashboard() {
-  const [products, setProducts] = useState([]);
-  const [sales, setSales] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showAddTeller, setShowAddTeller] = useState(false);
-  const toast = useToast();
+  // Local UI state
+  const [products, setProducts] = useState([]); // product list returned by /api/products
+  const [sales, setSales] = useState([]); // sales records returned by /api/sales
+  const [users, setUsers] = useState([]); // users returned by /api/users
+  const [loading, setLoading] = useState(false); // global loading indicator for the page
+  const [showAddTeller, setShowAddTeller] = useState(false); // toggles the AddTellerModal
+  const toast = useToast(); // toast helper for user feedback (errors/success)
 
-  // Fetch statistics and lists on mount
-
+  // Fetch statistics and lists from the API (runs on mount and on manual refresh)
   const fetchAll = async () => {
+    // Show global loader while the three API requests are pending
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
+
+    // Retrieve stored JWT token for authenticated routes
     const token = localStorage.getItem("token");
+
     try {
+      // Fetch products, sales and users in parallel to reduce overall latency
       const [pRes, sRes, uRes] = await Promise.all([
         axios.get("http://localhost:5000/api/products", { headers: { Authorization: `Bearer ${token}` } }),
         axios.get("http://localhost:5000/api/sales", { headers: { Authorization: `Bearer ${token}` } }),
         axios.get("http://localhost:5000/api/users", { headers: { Authorization: `Bearer ${token}` } })
       ]);
+
+      // Persist the response payloads into local state for rendering
       setProducts(pRes.data);
       setSales(sRes.data);
       setUsers(uRes.data);
     } catch (err) {
+      // Errors are surfaced via toast to give immediate feedback to the admin
       console.error(err);
       toast.add(err.response?.data?.message || "Failed to load dashboard data", 'error');
     }
+
+    // Hide the global loader
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(false);
   };
@@ -45,21 +63,33 @@ export default function AdminDashboard() {
     fetchAll();
   }, []);
 
+  // Derived metrics used in the dashboard cards and lists
   const totalProducts = products.length;
   const now = new Date();
+
+  // Sales that happened today (compares local date strings)
   const salesToday = sales.filter(s => new Date(s.date).toDateString() === now.toDateString()).length;
+
+  // Sales in the current month/year
   const salesThisMonth = sales.filter(s => {
     const d = new Date(s.date);
     return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
   }).length;
+
+  // Role counts for quick reference
   const numTellers = users.filter(u => u.role === 'teller').length;
   const numClients = users.filter(u => u.role === 'client').length;
+
+  // Products with low inventory (example threshold: 5 units)
   const lowStock = products.filter(p => p.quantityInStock <= 5);
 
+  // Deletes a user by id after explicit confirmation.
+  // Note: server-side authorization ensures only admins can perform this.
   const deleteUser = async (id) => {
-    if (!confirm('Delete this user?')) return;
+    if (!confirm('Delete this user?')) return; // abort if admin cancels
     const token = localStorage.getItem('token');
     await axios.delete(`http://localhost:5000/api/users/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+    // Refresh dashboard data to reflect the deletion
     fetchAll();
   };
 

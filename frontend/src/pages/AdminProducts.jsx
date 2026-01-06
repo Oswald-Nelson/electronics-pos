@@ -3,6 +3,7 @@
  * Admin view to manage products: list, edit, delete and sync images.
  * Inline comments added for admin actions and modal behavior.
  */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
@@ -145,7 +146,7 @@ function EditModal({ product, onClose, onSaved }) {
     const token = localStorage.getItem('token')
     axios.get('http://localhost:5000/api/products/images', { headers: { Authorization: `Bearer ${token}` } })
       .then(res=> setImages(res.data || []))
-      .catch(()=> setImages([]))
+      .catch((err)=> { console.error(err); setImages([]) })
   },[])
 
   const handleUpload = async (e) => {
@@ -153,7 +154,7 @@ function EditModal({ product, onClose, onSaved }) {
     if(!file) return
     const token = localStorage.getItem('token')
     const fd = new FormData(); fd.append('image', file)
-    try{ setUploading(true); const res = await axios.post('http://localhost:5000/api/products/upload', fd, { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }); setImage(res.data.url); setImages(prev=>[...prev, res.data.filename]); setUploading(false) }catch(e){ setUploading(false); toast.add('Upload failed', 'error') }
+    try{ setUploading(true); const res = await axios.post('http://localhost:5000/api/products/upload', fd, { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } }); setImage(res.data.url); setImages(prev=>[...prev, res.data.filename]); setUploading(false) }catch(err){ console.error(err); setUploading(false); toast.add('Upload failed', 'error') }
   }
 
   const handleSave = async () => {

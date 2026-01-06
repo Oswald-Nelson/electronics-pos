@@ -3,6 +3,7 @@
  * Public product listing page. Fetches products and allows adding to cart.
  * Comments are concise (Option A): file purpose + short notes on core functions.
  */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";

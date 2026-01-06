@@ -1,10 +1,17 @@
+/**
+ * scripts/replaceProducts.js
+ * Utility script to remove outdated products and insert/update a curated set.
+ * Use with caution: it mutates the database.
+ */
 const mongoose = require('mongoose');
 const Product = require('../models/Product');
 
 const dbUrl = 'mongodb://127.0.0.1:27017/pos_system';
 
+// Names to remove from the DB if present (useful when replacing old demo data)
 const toRemove = ['Smartphone X','Laptop Pro','Wireless Headphones'];
 
+// Curated new product list to insert or update
 const newProducts = [
   { name: 'Apple AirPods Pro 3', price: 199.99, category: 'Audio', brand: 'Apple', quantityInStock: 20, image: '/uploads/products/Apple AirPods Pro 3.jpeg' },
   { name: 'ASUS NVIDIA GeForce RTX 5090', price: 1299.99, category: 'GPU', brand: 'ASUS', quantityInStock: 10, image: '/uploads/products/ASUS NVIDIA GeForce RTX 5090.jpeg' },

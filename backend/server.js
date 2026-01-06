@@ -1,17 +1,25 @@
+/**
+ * server.js
+ * Express server entrypoint for the POS backend. Registers middleware, routes and static assets.
+ * NOTE: For production, move sensitive values (DB URL, JWT secret, PORT) to environment variables.
+ */
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
 
+// Basic middleware
 app.use(cors());
 app.use(express.json());
+
+// Authentication routes (register/login/change-password)
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes);
 
 
-// Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/pos_system")
+// Connect to MongoDB (uses MONGODB_URI env var in production, falls back to local DB)
+mongoose.connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/pos_system")
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 

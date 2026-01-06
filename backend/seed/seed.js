@@ -1,3 +1,8 @@
+/**
+ * seed/seed.js
+ * Database seeding script for local development. Resets users and products.
+ * Usage: node seed/seed.js
+ */
 require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");

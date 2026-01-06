@@ -1,3 +1,14 @@
+/*
+  src/App.css
+  -----------------
+  Small collection of global and utility styles used by the frontend example pages.
+  - Container layout (#root)
+  - Logo sizing and animation rules (.logo, @keyframes logo-spin)
+  - Card and text helpers
+  - Small UI utilities (.cart-badge, .pulse, .input-invalid)
+*/
+
+/* Root container: centers content, constrains width and adds page padding */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,19 +16,24 @@
   text-align: center;
 }
 
+/* Logo: fixed size, inner padding and smooth filter transitions */
 .logo {
   height: 6em;
   padding: 1.5em;
+  /* hint to browser about what will change for better performance */
   will-change: filter;
   transition: filter 300ms;
 }
+/* Drop-shadow on hover for the generic logo */
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+/* Slightly different shadow color when the React logo variant is hovered */
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Keyframes used to spin the logo (applied conditionally below) */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -27,21 +43,27 @@
   }
 }
 
+/* Respect user's reduced motion preference; only apply continuous spin when allowed */
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
+/* Simple card padding utility used by some example UI blocks */
 .card {
   padding: 2em;
 }
 
+/* Subtle muted color used for documentation or helper text */
 .read-the-docs {
   color: #888;
 }
 
-/* small utility classes used by the UI updates */
+/* --- Utility classes --- */
+
+/* Small red circular badge for cart counts or notification counts
+   Positioned absolutely so it can overlap an icon */
 .cart-badge {
   position: absolute;
   right: -6px;
@@ -50,24 +72,29 @@
   color: white;
   font-size: 0.6rem;
   padding: 0.12rem 0.38rem;
-  border-radius: 9999px;
+  border-radius: 9999px; /* fully rounded */
   line-height: 1;
   min-width: 18px;
   text-align: center;
 }
 
+/* Small pulse animation trigger; used for short attention effects (e.g., after adding to cart) */
 .pulse {
   animation: pulse 900ms ease-out;
 }
 
+/* Pulse keyframes used by .pulse */
 @keyframes pulse {
   0% { transform: scale(1); }
   50% { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
 
+/* Styling applied to inputs that fail validation to show an error state */
 .input-invalid {
+  /* important is used to override third-party styles in examples; avoid where possible */
   border-color: #ef4444 !important;
+  /* subtle red glow to call attention without being intrusive */
   box-shadow: 0 0 0 3px rgba(239,68,68,0.08);
 }
 

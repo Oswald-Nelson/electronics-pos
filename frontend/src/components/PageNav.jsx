@@ -2,7 +2,8 @@
  * PageNav.jsx
  * Simple header/navigation used across pages. Shows role-aware home navigation.
  */
-import React, { useEffect, useState } from 'react'
+/* eslint-disable react-hooks/set-state-in-effect */
+import React, { useEffect, useState } from 'react' 
 import { useNavigate } from 'react-router-dom'
 
 export default function PageNav(){
@@ -15,7 +16,7 @@ export default function PageNav(){
       const cart = JSON.parse(localStorage.getItem('cart')||'[]')
       const count = (cart || []).reduce((s,i)=> s + (Number(i.qty)||0), 0)
       setCartCount(count)
-    }catch(e){ setCartCount(0) }
+    }catch(err){ console.error(err); setCartCount(0) }
   }
 
   useEffect(()=>{

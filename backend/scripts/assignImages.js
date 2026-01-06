@@ -1,3 +1,8 @@
+/**
+ * scripts/assignImages.js
+ * Utility script to auto-assign product images by matching filenames to product names.
+ * Usage: node scripts/assignImages.js
+ */
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
@@ -11,6 +16,7 @@ function normalize(s){
   return (s||'').toLowerCase().replace(/[^a-z0-9\s]/g,'').trim();
 }
 
+// Attempt to find the most relevant image file for a product name using progressive heuristics
 function findBestMatch(name, files){
   const n = normalize(name);
   if(!n) return null;

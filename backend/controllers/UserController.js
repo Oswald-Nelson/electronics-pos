@@ -1,3 +1,7 @@
+/**
+ * UserController.js
+ * CRUD operations for user accounts. Admin-only endpoints are protected via route middleware.
+ */
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 

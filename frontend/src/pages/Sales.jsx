@@ -2,6 +2,7 @@
  * Sales.jsx
  * Displays sales records (role-aware on backend). Admins see all; tellers/clients see filtered results.
  */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";

@@ -3,6 +3,7 @@
  * Point-of-sale dashboard for teller users. Supports searching, cart management, checkout and sales reports.
  * Inline comments explain key actions: fetching, adding to cart, checkout validation.
  */
+/* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
@@ -21,7 +22,6 @@ export default function TellerDashboard() {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [paymentBreakdown, setPaymentBreakdown] = useState({ cash: 0, momo: 0, card: 0, other: 0 });
   const [amountPaid, setAmountPaid] = useState(0)
-  const [change, setChange] = useState(0)
   const [mySales, setMySales] = useState([]);
   const [salesLoading, setSalesLoading] = useState(false);
   const [salesFilters, setSalesFilters] = useState({ startDate: "", endDate: "", productId: "", minAmount: "", maxAmount: "" });

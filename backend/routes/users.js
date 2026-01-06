@@ -1,3 +1,7 @@
+/**
+ * users routes
+ * User management endpoints. Admin-only routes are protected by `authorizeRoles('admin')`.
+ */
 const express = require('express');
 const router = express.Router();
 const { getUsers, createUser, updateUser, deleteUser, getUserById } = require('../controllers/UserController');

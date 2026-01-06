@@ -21,10 +21,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PageNav from './components/PageNav'
 
 function Layout(){
+  // Determine the current route so we can hide the top navigation on the login page
   const location = useLocation()
   const hideNav = location && location.pathname === "/"
 
-  // Layout hides PageNav on the login route and renders nested routes in the container
+  // Layout component: renders `PageNav` (unless we're on the login page) and an Outlet
+  // where matched child routes will render. This centralizes the shared layout.
   return (
     <div>
       {!hideNav && <PageNav />}
@@ -38,9 +40,11 @@ function Layout(){
 
 
 function App() {
+  // Application route table. ProtectedRoute wraps pages that require auth/roles.
   return (
     <Routes>
       <Route element={<Layout/>}>
+      {/* Public login route */}
       <Route path="/" element={<Login />} />
       <Route
         path="/admin"
